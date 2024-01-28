@@ -26,8 +26,8 @@ function setup() {
   playerOne = {
     x: width/4,
     y: height/2,
-    dx: 8,
-    dy: 8,
+    dx: cellSize*GRID_SIZE/100,
+    dy: cellSize*GRID_SIZE/100,
     score: 0,
     color: color(3, 4, 94),
     radius: cellSize*0.75,
@@ -36,8 +36,8 @@ function setup() {
   playerTwo = {
     x: width/4 * 3,
     y: height/2,
-    dx: -8,
-    dy: -8,
+    dx: -cellSize*GRID_SIZE/100,
+    dy: -cellSize*GRID_SIZE/100,
     score: 0,
     color: color(144, 224, 239),
     radius: cellSize*0.75,
