@@ -1,0 +1,12 @@
+/* black background for page */
+body {
+    background-color: black;
+}
+
+/* center canvas element horizontally and vertically */
+canvas {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
