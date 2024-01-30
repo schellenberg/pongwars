@@ -44,6 +44,68 @@ function setup() {
   };
 
   angleMode(DEGREES);
+
+  playerOneScoreElement = createDiv(playerOneScore);
+  playerTwoScoreElement = createDiv(playerTwoScore);
+
+  setupScore();
+}
+
+function setupScore() {
+  //get canvas location on page
+  let canvasX = windowWidth/2 - width/2;
+  let canvasY = windowHeight/2 - height/2;
+
+  //set score elements locations to be beneath the canvas, and centered on the left and right sides of the canvas
+  let playerOneScoreX = canvasX + width/4 * 3;
+  let playerOneScoreY = canvasY + cellSize*GRID_SIZE + 2;
+
+  let playerTwoScoreX = canvasX + width/4;
+  let playerTwoScoreY = canvasY + cellSize*GRID_SIZE + 2;
+
+  //create score elements
+  playerOneScoreElement.position(playerOneScoreX, playerOneScoreY);
+  playerOneScoreElement.style("color", "white");
+  playerOneScoreElement.style("font-size", `${width/25}px`);
+  playerOneScoreElement.style("font-family", "Arial");
+  playerOneScoreElement.style("text-align", "center");
+
+  playerTwoScoreElement.position(playerTwoScoreX, playerTwoScoreY);
+  playerTwoScoreElement.style("color", "white");
+  playerTwoScoreElement.style("font-size", `${width/25}px`);
+  playerTwoScoreElement.style("font-family", "Arial");
+  playerTwoScoreElement.style("text-align", "center");
+}
+
+function windowResized() {
+  //recalculate cellSize and canvas size
+  if (windowHeight > windowWidth) {
+    cellSize = windowWidth*0.9/GRID_SIZE;
+  }
+  else {
+    cellSize = windowHeight*0.9/GRID_SIZE;
+  }
+  resizeCanvas(cellSize*GRID_SIZE, cellSize*GRID_SIZE);
+
+  //resize ball
+  playerOne.radius = cellSize*0.75;
+  playerTwo.radius = cellSize*0.75;
+
+  //get vectors of ball speeds
+  let playerOneSpeed = createVector(playerOne.dx, playerOne.dy);
+  let playerTwoSpeed = createVector(playerTwo.dx, playerTwo.dy);
+  
+  //recalculate ball speeds
+  playerOneSpeed.setMag(cellSize*GRID_SIZE/100);
+  playerTwoSpeed.setMag(cellSize*GRID_SIZE/100);
+
+  //set ball speeds
+  playerOne.dx = playerOneSpeed.x;
+  playerOne.dy = playerOneSpeed.y;
+  playerTwo.dx = playerTwoSpeed.x;
+  playerTwo.dy = playerTwoSpeed.y;
+
+  setupScore();
 }
 
 function draw() {
@@ -57,12 +119,17 @@ function draw() {
 }
 
 function displayScore() {
-  textSize(width/15);
-  textAlign(CENTER, CENTER);
-  fill(playerOne.color);
-  text(playerOneScore, width/12, height/12 * 11);
-  fill(playerTwo.color);
-  text(playerTwoScore, width/12 * 11, height/12 * 11);
+  //old method of displaying score, on the canvas
+  // textSize(width/15);
+  // textAlign(CENTER, CENTER);
+  // fill(playerOne.color);
+  // text(playerOneScore, width/12, height/12 * 11);
+  // fill(playerTwo.color);
+  // text(playerTwoScore, width/12 * 11, height/12 * 11);
+
+  //new method of displaying score, on the page
+  playerOneScoreElement.html(playerOneScore);
+  playerTwoScoreElement.html(playerTwoScore);
 }
 
 function movePlayer(player) {
@@ -105,9 +172,9 @@ function checkForCollision(player, x, y, angle) {
   let gridY = Math.floor(y / cellSize);
   
   //check if gridX and gridY are within the grid
-  if ((gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE) &&
-      ((grid[gridY][gridX] === OWNED_BY_PLAYER_TWO && player.color === playerTwo.color) ||
-      (grid[gridY][gridX] === OWNED_BY_PLAYER_ONE && player.color === playerOne.color))) {
+  if (gridX >= 0 && gridX < GRID_SIZE && gridY >= 0 && gridY < GRID_SIZE &&
+      (grid[gridY][gridX] === OWNED_BY_PLAYER_TWO && player.color === playerTwo.color ||
+      grid[gridY][gridX] === OWNED_BY_PLAYER_ONE && player.color === playerOne.color)) {
 
     /// Moving more horizontally 
     if (Math.abs(Math.cos(angle)) > Math.abs(Math.sin(angle))) {
